@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import {
     Drawer,
@@ -8,6 +9,17 @@ import {
 } from "./ui/drawer";
 
 export const DivisionDrawer = ({ isOpen, onClose, division, isDark, colorClass }) => {
+    useEffect(() => {
+        if (isOpen) {
+            document.documentElement.style.overflow = 'hidden';
+        } else {
+            document.documentElement.style.overflow = '';
+        }
+        return () => {
+            document.documentElement.style.overflow = '';
+        };
+    }, [isOpen]);
+
     const getColorClasses = () => {
         const colorMap = {
             emerald: { text: "text-emerald-600", bg: "bg-emerald-50", border: "border-emerald-200" },
@@ -26,11 +38,11 @@ export const DivisionDrawer = ({ isOpen, onClose, division, isDark, colorClass }
         <Drawer open={isOpen} onOpenChange={onClose} direction="bottom">
             <DrawerContent className={`backdrop-blur-2xl transition-all duration-500 ${isDark
                 ? "bg-gradient-to-br from-white/[0.08] to-white/[0.02] border-t border-white/[0.2] shadow-2xl"
-                : "bg-gradient-to-br from-white/[0.8] to-white/[0.6] border-t border-white/[0.4] shadow-2xl"
+                : "bg-white border-t border-gray-200 shadow-2xl"
                 }`}>
                 <DrawerHeader className={`border-b backdrop-blur-md transition-colors duration-500 ${isDark
                     ? "border-white/[0.15] bg-gradient-to-b from-white/[0.1] to-white/[0.05]"
-                    : "border-white/[0.3] bg-gradient-to-b from-white/[0.5] to-white/[0.3]"
+                    : "border-gray-200 bg-gray-50"
                     }`}>
                     <div className="flex items-center justify-between">
                         <DrawerTitle className={`text-2xl font-bold font-bricolage ${isDark ? "text-white" : colors.text}`}>

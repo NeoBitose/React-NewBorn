@@ -1,6 +1,6 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useId, useMemo, useRef, useState } from 'react';
 
-const CurvedLoop = ({
+const CurvedLoop = memo(({
     marqueeText = '',
     speed = 2,
     className,
@@ -129,6 +129,8 @@ const CurvedLoop = ({
             </svg>
         </div>
     );
-};
+});
+
+CurvedLoop.displayName = 'CurvedLoop';
 
 export default CurvedLoop;

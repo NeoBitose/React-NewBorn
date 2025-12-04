@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { FiGithub } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import DetailPortfolioSkeleton from "../components/skeletons/DetailPortfolioSkeleton";
@@ -6,8 +7,13 @@ import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import { useTheme } from "../hooks/useTheme";
 
 export default function DetailPortfolio() {
+  useDocumentTitle('Portfolio');
   const { slug } = useParams();
   const isDark = useTheme();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
 
   const { dataDetailPortfolio, loadingDetailPortfolio } = useFetchDetailPortfolio(slug);
 
@@ -79,9 +85,7 @@ export default function DetailPortfolio() {
             </div>
           )}
 
-          {/* Content Section - Right */}
           <div className="flex flex-col justify-center gap-6">
-            {/* Title */}
             <div>
               <h1
                 className={`text-3xl md:text-4xl font-bold mb-3 ${isDark ? "text-emerald-300" : "text-emerald-700"
@@ -95,12 +99,10 @@ export default function DetailPortfolio() {
               </div>
             </div>
 
-            {/* Description */}
             <p className={`text-sm leading-relaxed backdrop-blur-sm rounded-xl p-3 border transition-all duration-300 ${isDark ? "bg-white/8 border-white/15 text-white/85" : "bg-white/30 border-white/40 text-gray-700"}`}>
               {portfolio?.description}
             </p>
 
-            {/* Info */}
             <div className={`rounded-2xl p-3 border backdrop-blur-md transition-all duration-300 ${isDark
               ? "bg-emerald-500/20 border-emerald-400/40 hover:bg-emerald-500/30 hover:border-emerald-400/60"
               : "bg-emerald-400/25 border-emerald-300/50 hover:bg-emerald-400/35 hover:border-emerald-300/70"

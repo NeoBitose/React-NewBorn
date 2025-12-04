@@ -6,6 +6,7 @@ import { NavigationCard } from "../components/NavigationCard";
 import { SuccessToast, ValidationAlert } from "../components/Notifications";
 import HomeBlogSkeleton from "../components/skeletons/HomeBlogSkeleton";
 import HomeProkerSkeleton from "../components/skeletons/HomeProkerSkeleton";
+import StickerPeel from "../components/StickerPeel";
 import { divisionsData } from "../constants/divisions";
 import { useFetchActiveProker } from "../hooks/homepage/useFetchActiveProker";
 import { useFetchTopPost } from "../hooks/homepage/useFetchTopPost";
@@ -17,6 +18,9 @@ import { validateFormData } from "../utils/formValidation";
 function Home() {
   useDocumentTitle("Beranda");
   const isDark = useTheme();
+  const currentYear = new Date().getFullYear() - 1;
+  const nextYear = currentYear + 1;
+  const yearLabel = `HMIF ${String(currentYear).slice(-2)}/${String(nextYear).slice(-2)}`;
   const { data: topPosts, loading: loadingPosts } = useFetchTopPost();
   const { dataActiveProker, loading: loadingActiveProker } = useFetchActiveProker();
   const carouselRef = React.useRef(null);
@@ -28,6 +32,10 @@ function Home() {
     showSuccessToast,
     showValidationAlert,
   } = useNotification();
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleScroll = (direction) => {
     if (carouselRef.current) {
@@ -70,7 +78,7 @@ function Home() {
           ></div>
         </div>
 
-        <div className="container px-4 mx-auto relative z-10">
+        <div className="container px-4 md:px-4 mx-auto relative z-10">
           <div
             className={`rounded-3xl overflow-hidden backdrop-blur-xl transition-all duration-500 ${isDark
               ? "bg-white/[0.05] border border-white/[0.1] shadow-2xl"
@@ -81,17 +89,17 @@ function Home() {
               className={`absolute inset-0 rounded-3xl ${isDark ? "bg-gradient-to-br from-white/[0.05] to-transparent" : "bg-gradient-to-br from-white/[0.5] to-white/[0.2]"}`}
             ></div>
 
-            <div className="relative grid items-center grid-cols-1 gap-3 md:gap-8 px-6 md:px-16 py-12 md:py-20 md:grid-cols-3">
+            <div className="relative grid items-center grid-cols-1 gap-3 md:gap-8 px-4 md:px-12 py-12 md:py-12 md:grid-cols-3">
               <div className="space-y-6">
-                <div>
+                <div className=''>
                   <p
-                    className={`text-xs md:text-sm tracking-widest uppercase transition-colors duration-500 ${isDark ? "text-white/70" : "text-gray-900/90"}`}
+                    className={`text-xs sm:text-xs md:text-xs tracking-widest uppercase transition-colors duration-500 ${isDark ? "text-white/70" : "text-gray-900/90"}`}
                   >
-                    HMIF 24/25
+                    {yearLabel}
                   </p>
                   <h1
-                    className={`font-bricolage text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 transition-colors duration-500 ${isDark ? "text-white" : "text-gray-900 drop-shadow-lg"}`}
-                  >
+                    className={`font-bricolage text-3xl md:text-3xl lg:text-5xl font-extrabold leading-tight mb-6 transition-colors duration-500 ${isDark ? "text-white" : "text-gray-900 drop-shadow-lg"}`}
+                    data-aos="fade-left">
                     SELANGKAH
                     <br />
                     LEBIH DEKAT
@@ -105,36 +113,37 @@ function Home() {
                     </span>
                   </h1>
                 </div>
-                <div className="flex flex-wrap gap-4 pt-2">
+                <div className="flex gap-2 md:gap-2">
                   <Link
                     to="/tentang"
-                    className={`inline-flex items-center justify-center gap-2 px-8 py-3 font-semibold transition-all duration-300 backdrop-blur-md rounded-full hover:scale-105 active:scale-95 ${isDark
-                      ? 'bg-white/20 border border-white/30 text-white hover:bg-white/30 hover:border-white/50 hover:shadow-2xl'
-                      : 'bg-emerald-600/20 border border-emerald-600/40 text-emerald-700 hover:bg-emerald-600/30 hover:border-emerald-600/60 hover:shadow-2xl hover:shadow-emerald-500/20'
-                      }`}
+                    className={`inline-flex items-center justify-center gap-2 px-5 md:px-6 py-2 md:py-3 text-xs md:text-sm font-semibold transition-all duration-300 rounded-full ${isDark
+                      ? 'bg-white/10 border border-white/20 text-white hover:bg-white/15 hover:border-white/40'
+                      : 'bg-emerald-600/15 border border-emerald-600/30 text-emerald-700 hover:bg-emerald-600/25 hover:border-emerald-600/50'
+                      } hover:scale-103 active:scale-98`}
                   >
                     Tentang
                   </Link>
                   <Link
                     to="/blog"
-                    className={`inline-flex items-center justify-center gap-2 px-8 py-3 font-semibold transition-all duration-300 backdrop-blur-md rounded-full hover:scale-105 active:scale-95 ${isDark
-                      ? 'border-2 border-white/40 bg-white/10 text-white hover:bg-white/20 hover:border-white/60 hover:shadow-2xl'
-                      : 'border-2 border-emerald-500/40 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20 hover:border-emerald-500/60 hover:shadow-2xl hover:shadow-emerald-500/20'
-                      }`}
+                    className={`inline-flex items-center justify-center gap-2 px-5 md:px-8 py-2 md:py-3 text-xs md:text-sm font-semibold transition-all duration-300 rounded-full ${isDark
+                      ? 'border border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white/40'
+                      : 'border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20 hover:border-emerald-500/50'
+                      } hover:scale-103 active:scale-98`}
                   >
                     Card
                   </Link>
                 </div>
               </div>
 
-              <div className="hidden md:block relative">
+              <div className="hidden md:block md:col-span-2 lg:col-span-1 xl:col-span-1 relative">
                 <div
-                  className={`absolute -top-16 left-1/2 transform -translate-x-1/2 w-full scale-150 transition-all duration-500 ${isDark ? "drop-shadow-2xl" : "drop-shadow-2xl"}`}
+                  className={`md:scale-95 lg:scale-125 xl:scale-150 md:translate-y-0 lg:translate-y-10 absolute -top-16 left-1/2 transform -translate-x-1/2 xl:translate-y-8 w-full scale-150 ${isDark ? "drop-shadow-2xl" : "drop-shadow-2xl"}`}
                 >
                   <img
                     src="/cogito.webp"
-                    alt="HMIF Mascot"
-                    className={`object-contain filter brightness-105 scale-125 transition-all duration-500 ${isDark ? "drop-shadow-2xl" : "drop-shadow-2xl filter brightness-110"}`}
+                    loading="lazy"
+                    decoding="async"
+                    className={`object-contain filter brightness-105 md:scale-150 lg:scale-150 xl:scale-110 ${isDark ? "drop-shadow-2xl" : "drop-shadow-2xl filter brightness-110"}`}
                   />
                 </div>
               </div>
@@ -144,8 +153,8 @@ function Home() {
                   className={`text-right leading-relaxed space-y-3 max-w-sm ml-auto transition-colors duration-500 ${isDark ? "text-gray-100" : "text-gray-700"}`}
                 >
                   <p
-                    className={`transition-colors duration-500 text-base md:text-lg ${isDark ? "text-gray-300" : "text-gray-600"}`}
-                  >
+                    className={`transition-colors duration-500 text-base md:text-lg lg:text-sm xl:text-lg ${isDark ? "text-gray-300" : "text-gray-600"}`}
+                    data-aos="fade-right">
                     Organisasi yang berada di bawah naungan Fakultas Ilmu Komputer dengan tujuan
                     untuk menampung aspirasi serta meningkatkan kualitas mahasiswa di dalam
                     lingkungan Program Studi Informatika Universitas Jember.
@@ -157,7 +166,7 @@ function Home() {
         </div>
       </section>
 
-      <section className={`transition-colors duration-500 py-2 ${isDark ? "bg-black" : "bg-white"}`}>
+      <section className={`transition-colors font-bricolage duration-500 py-2 ${isDark ? "bg-black" : "bg-white"}`}>
         <CurvedLoop
           marqueeText="✦     JAYALAH HIMPUNANKU!     ✦"
           speed={0.5}
@@ -171,70 +180,83 @@ function Home() {
       <section
         className={`py-12 transition-colors duration-500 ${isDark ? "bg-gray-900" : "bg-white"}`}
       >
-        <div className="container px-4 mx-auto relative z-10">
+        <div className="container px-4 md:px-8 mx-auto relative z-10">
           <div className="mb-3 flex items-center gap-4">
             <div className={`h-1 w-12 transition-colors duration-500 ${isDark ? "bg-emerald-500" : "bg-emerald-500"}`}></div>
             <p className={`text-sm font-semibold tracking-widest uppercase transition-colors duration-500 ${isDark ? "text-emerald-400" : "text-emerald-600"}`}>Navigasi Cepat</p>
           </div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-            <NavigationCard
-              to="/blog"
-              icon="📝"
-              title="Blog & Artikel"
-              description="Baca berita dan artikel terbaru"
-              isDark={isDark}
-              colorClass="emerald"
-            />
-            <NavigationCard
-              to="/portfolio"
-              icon="💼"
-              title="Portfolio"
-              description="Karya dan proyek mahasiswa"
-              isDark={isDark}
-              colorClass="teal"
-            />
-            <NavigationCard
-              to="/proker"
-              icon="📅"
-              title="Program Kerja"
-              description="Kegiatan dan acara HMIF"
-              isDark={isDark}
-              colorClass="cyan"
-            />
-            <NavigationCard
-              to="/staff"
-              icon="👥"
-              title="Kepengurusan"
-              description="Struktur organisasi HMIF"
-              isDark={isDark}
-              colorClass="blue"
-            />
+            <div>
+              <NavigationCard
+                to="/blog"
+                icon="📝"
+                title="Blog & Artikel"
+                description="Baca berita dan artikel terbaru"
+                isDark={isDark}
+                colorClass="emerald"
+              />
+            </div>
+            <div>
+              <NavigationCard
+                to="/portfolio"
+                icon="💼"
+                title="Portfolio"
+                description="Karya dan proyek mahasiswa"
+                isDark={isDark}
+                colorClass="teal"
+              />
+            </div>
+            <div>
+              <NavigationCard
+                to="/proker"
+                icon="📅"
+                title="Program Kerja"
+                description="Kegiatan dan acara HMIF"
+                isDark={isDark}
+                colorClass="cyan"
+              />
+            </div>
+            <div>
+              <NavigationCard
+                to="/staf"
+                icon="👥"
+                title="Kepengurusan"
+                description="Struktur organisasi HMIF"
+                isDark={isDark}
+                colorClass="blue"
+              />
+            </div>
           </div>
         </div>
       </section>
 
       <section
-        className={`py-12 transition-colors duration-500 ${isDark ? "bg-gray-900" : "bg-white"}`}
+        className={`py-12 transition-colors duration-500 relative ${isDark ? "bg-gray-900" : "bg-white"}`}
       >
-        <div className="container px-4 mx-auto relative z-10">
+        <div className="container px-4 md:px-8 mx-auto relative z-10">
           <div className={`absolute left-0 top-1/2 w-1 h-24 transition-colors duration-500 ${isDark ? "bg-gradient-to-b from-transparent via-emerald-500/50 to-transparent" : "bg-gradient-to-b from-transparent via-emerald-400/50 to-transparent"}`}></div>
-          <div className="space-y-3">
+          <div className="space-y-3 mb-8">
             <div className="flex items-center gap-4">
               <div>
-                <p className="inline-block px-3 py-1 text-white rounded-full backdrop-blur-xl bg-gradient-to-r from-teal-500/40 via-cyan-500/40 to-teal-500/40 border border-teal-300/30 shadow-lg">
+                <p className={`inline-block px-3 py-1  rounded-full backdrop-blur-xl transition-all duration-500 ${isDark ? "text-white bg-gradient-to-r from-teal-500/40 via-cyan-500/40 to-teal-500/40 border border-teal-300/30" : " text-gray-50 bg-gradient-to-r from-teal-600/60 via-cyan-600/60 to-teal-600/60 border border-teal-500/50"} shadow-lg`}
+                  data-aos="zoom-in">
                   Kabinet
                 </p>
               </div>
               <h2
                 className={`text-4xl md:text-5xl font-black font-bricolage transition-colors duration-500 ${isDark ? "text-white" : "text-gray-800"}`}
+                data-aos="fade-down"
               >
                 Arunachakra
               </h2>
               <div className={`flex-grow h-0.5 transition-colors duration-500 ${isDark ? "bg-gradient-to-r from-emerald-500/50 to-transparent" : "bg-gradient-to-r from-emerald-400/50 to-transparent"}`}></div>
             </div>
-            <div>
+          </div>
+
+          <div className="flex max-w-5xl">
+            <div className="space-y-6">
               <p
-                className={`text-md md:text-lg transition-colors duration-500 max-w-6xl ${isDark ? "text-gray-300" : "text-gray-600"}`}
+                className={`text-md md:text-lg transition-colors duration-500 ${isDark ? "text-gray-300" : "text-gray-600"}`}
               >
                 Terdiri dari dua kata, Aruna yang berarti fajar atau cahaya matahari terbit, dan
                 Chakra yang berarti roda atau siklus. Secara keseluruhan, ArunaChakra dapat
@@ -243,6 +265,23 @@ function Home() {
                 setiap siklus baru membawa peluang dan pencerahan.
               </p>
             </div>
+
+            <div></div>
+          </div>
+        </div>
+
+        <div className="hidden sm:block absolute inset-0 z-20 pointer-events-none">
+          <div className="absolute inset-0 pointer-events-auto">
+            <StickerPeel
+              imageSrc="/images/HMIF-LOGO-BESAR.png"
+              width={200}
+              rotate={15}
+              peelBackHoverPct={25}
+              peelBackActivePct={35}
+              shadowIntensity={0.5}
+              lightingIntensity={0.08}
+              initialPosition={{ x: 1300, y: 80 }}
+            />
           </div>
         </div>
       </section>
@@ -267,8 +306,10 @@ function Home() {
             </p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 mb-12">
-            {divisionsData.map((division) => (
-              <DivisionCard key={division.name} division={division} isDark={isDark} />
+            {divisionsData.map((division, index) => (
+              <div key={division.name}>
+                <DivisionCard division={division} isDark={isDark} />
+              </div>
             ))}
           </div>
         </div>
@@ -277,10 +318,11 @@ function Home() {
       <section
         className={`py-12 transition-colors duration-500 ${isDark ? "bg-gray-900" : "bg-white"}`}
       >
-        <div className="container px-4 mx-auto relative z-10">
+        <div className="container px-4 md:px-8 mx-auto relative z-10">
           <div className="mb-3 flex items-center gap-3">
             <h2
               className={`text-3xl md:text-4xl font-black font-bricolage transition-colors duration-500 ${isDark ? "text-white" : "text-gray-800"}`}
+              data-aos="fade-down"
             >
               PROGRAM KERJA AKTIF
             </h2>
@@ -288,6 +330,7 @@ function Home() {
           </div>
           <p
             className={`mb-2 text-lg transition-colors duration-500 max-w-2xl ${isDark ? "text-gray-300" : "text-gray-600"}`}
+            data-aos="fade-right"
           >
             Kegiatan dan program yang sedang berlangsung saat ini
           </p>
@@ -333,6 +376,9 @@ function Home() {
                             </div>
                             <img
                               src={import.meta.env.VITE_API_BASE_URL_ASSETS + "proker/" + proker.logo}
+                              alt={proker.name}
+                              loading="lazy"
+                              decoding="async"
                               className="w-36 object-contain group-hover/card:scale-110 transition-transform duration-500"
                             />
                           </div>
@@ -421,10 +467,32 @@ function Home() {
               )}
             </div>
           ) : (
-            <div className="text-center py-12">
-              <p className={`text-lg ${isDark ? "text-gray-300" : "text-gray-600"}`}>
-                Tidak ada program kerja aktif saat ini
+            <div className="text-center font-bricolage py-12">
+              <p className={`text-lg mb-4 ${isDark ? "text-gray-300" : "text-gray-600"}`}>
+                Sedang merencanakan sesuatu yang besar... Nantikan pengumuman menarik kami!
               </p>
+              <Link
+                to="/proker"
+                className={`inline-flex items-center justify-center gap-2 px-6 py-2 text-sm font-semibold transition-all duration-300 rounded-full ${isDark
+                  ? 'bg-emerald-600/80 hover:bg-emerald-600 text-white border border-emerald-400/70 hover:shadow-lg'
+                  : 'bg-emerald-500/80 hover:bg-emerald-500 text-white border border-emerald-300/70 hover:shadow-lg'
+                  } hover:scale-105 active:scale-95`}
+              >
+                Lihat Program Kerja
+                <svg
+                  className="w-4 h-4 ml-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </Link>
             </div>
           )}
         </div>
@@ -433,7 +501,7 @@ function Home() {
       <section
         className={`py-12 transition-colors duration-500 ${isDark ? "bg-gray-800" : "bg-gray-50"}`}
       >
-        <div className="container px-4 mx-auto">
+        <div className="container px-4 md:px-8 mx-auto">
           <div className="mb-3 flex items-center gap-3">
             <h2
               className={`text-3xl md:text-4xl font-black font-bricolage transition-colors duration-500 ${isDark ? "text-white" : "text-gray-800"}`}
@@ -453,95 +521,99 @@ function Home() {
             <HomeBlogSkeleton />
           ) : topPosts && topPosts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {topPosts.slice(0, 6).map((post) => (
-                <Link
-                  key={post.id}
-                  to={`/blog/${post.slug}`}
-                  className={`group relative rounded-2xl transition-all duration-500 shadow-lg hover:shadow-2xl hover:-translate-y-2 overflow-hidden flex flex-col ${isDark
-                    ? "bg-gradient-to-br from-white/[0.08] to-white/[0.02] border border-emerald-500/20 hover:border-emerald-500/50 backdrop-blur-xl"
-                    : "bg-white border border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50"
-                    }`}
-                >
-                  <div
-                    className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${isDark ? "bg-gradient-to-br from-emerald-500/5 to-transparent" : "bg-gradient-to-br from-emerald-100/30 to-transparent"}`}
-                  ></div>
+              {topPosts.slice(0, 6).map((post, index) => (
+                <div key={post.id}>
+                  <Link
+                    to={`/blog/${post.slug}`}
+                    className={`group relative rounded-2xl transition-all duration-500 shadow-lg hover:shadow-2xl hover:-translate-y-2 overflow-hidden flex flex-col ${isDark
+                      ? "bg-gradient-to-br from-white/[0.08] to-white/[0.02] border border-emerald-500/20 hover:border-emerald-500/50 backdrop-blur-xl"
+                      : "bg-white border border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50"
+                      }`}
+                  >
+                    <div
+                      className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${isDark ? "bg-gradient-to-br from-emerald-500/5 to-transparent" : "bg-gradient-to-br from-emerald-100/30 to-transparent"}`}
+                    ></div>
 
-                  {post.thumbnail && (
-                    <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-emerald-500/10 to-teal-500/10">
-                      <img
-                        src={import.meta.env.VITE_API_BASE_URL_ASSETS + "post/" + post.thumbnail}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                  )}
-
-                  <div className="relative p-6 flex-1 flex flex-col">
-                    <div className="flex items-start justify-between gap-2 mb-2 flex-wrap">
-                      <div className="flex gap-2 flex-wrap">
-                        {post.tags && post.tags.length > 0 ? (
-                          post.tags.slice(0, 3).map((tag) => (
-                            <span
-                              key={tag.id}
-                              className="text-xs font-semibold px-2 py-1 rounded-full text-white"
-                              style={{
-                                backgroundColor: tag.color_code + "40",
-                                borderLeft: `3px solid ${tag.color_code}`,
-                              }}
-                            >
-                              {tag.name}
-                            </span>
-                          ))
-                        ) : (
-                          <span
-                            className={`text-xs font-semibold px-3 py-1 rounded-full ${isDark ? "bg-emerald-500/20 text-emerald-300" : "bg-emerald-100 text-emerald-700"}`}
-                          >
-                            {post.category || "Artikel"}
-                          </span>
-                        )}
-                      </div>
-                      <span
-                        className={`text-xs whitespace-nowrap ${isDark ? "text-gray-400" : "text-gray-500"}`}
-                      >
-                        {new Date(post.created_at).toLocaleDateString("id-ID", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </span>
-                    </div>
-
-                    <h3
-                      className={`text-base font-bold font-bricolage mb-2 line-clamp-2 transition-colors duration-500 ${isDark ? "text-white group-hover:text-emerald-300" : "text-gray-900 group-hover:text-emerald-600"}`}
-                    >
-                      {post.title}
-                    </h3>
-
-                    <p
-                      className={`text-sm line-clamp-3 transition-colors duration-500 mb-4 flex-1 ${isDark ? "text-gray-400" : "text-gray-600"}`}
-                    >
-                      {post.description
-                        ? post.description.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').trim().substring(0, 300)
-                        : "Artikel menarik untuk dibaca"}
-                    </p>
-
-                    <div className="flex items-center text-emerald-500 group-hover:text-emerald-600 transition-colors duration-500">
-                      <span className="text-sm font-semibold">Baca selengkapnya</span>
-                      <svg
-                        className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
+                    {post.thumbnail && (
+                      <div className="relative w-full h-56 md:h-80 lg:h-56 overflow-hidden bg-gradient-to-br from-emerald-500/10 to-teal-500/10">
+                        <img
+                          src={import.meta.env.VITE_API_BASE_URL_ASSETS + "post/" + post.thumbnail}
+                          alt={post.title}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
-                      </svg>
+                      </div>
+                    )}
+
+                    <div className="relative p-6 flex-1 flex flex-col">
+                      <div className="flex items-start justify-between gap-2 mb-2 flex-wrap">
+                        <div className="flex gap-2 flex-wrap">
+                          {post.tags && post.tags.length > 0 ? (
+                            post.tags.slice(0, 3).map((tag) => (
+                              <span
+                                key={tag.id}
+                                className="text-xs font-semibold px-2 py-1 rounded-full text-white"
+                                style={{
+                                  backgroundColor: tag.color_code + "40",
+                                  borderLeft: `3px solid ${tag.color_code}`,
+                                }}
+                              >
+                                {tag.name}
+                              </span>
+                            ))
+                          ) : (
+                            <span
+                              className={`text-xs font-semibold px-3 py-1 rounded-full ${isDark ? "bg-emerald-500/20 text-emerald-300" : "bg-emerald-100 text-emerald-700"}`}
+                            >
+                              {post.category || "Artikel"}
+                            </span>
+                          )}
+                        </div>
+                        <span
+                          className={`text-xs whitespace-nowrap ${isDark ? "text-gray-400" : "text-gray-500"}`}
+                        >
+                          {new Date(post.created_at).toLocaleDateString("id-ID", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </span>
+                      </div>
+
+                      <h3
+                        className={`text-base font-bold font-bricolage mb-2 line-clamp-2 transition-colors duration-500 ${isDark ? "text-white group-hover:text-emerald-300" : "text-gray-900 group-hover:text-emerald-600"}`}
+                      >
+                        {post.title}
+                      </h3>
+
+                      <p
+                        className={`text-sm line-clamp-3 transition-colors duration-500 mb-4 flex-1 ${isDark ? "text-gray-400" : "text-gray-600"}`}
+                      >
+                        {post.description
+                          ? post.description.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').trim().substring(0, 300)
+                          : "Artikel menarik untuk dibaca"}
+                      </p>
+
+                      <div className="flex items-center text-emerald-500 group-hover:text-emerald-600 transition-colors duration-500">
+                        <span className="text-sm font-semibold">Baca selengkapnya</span>
+                        <svg
+                          className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </div>
               ))}
             </div>
           ) : (
@@ -557,25 +629,25 @@ function Home() {
       <section
         className={`py-12 transition-colors duration-500 relative overflow-hidden ${isDark ? "bg-gray-900" : "bg-white"}`}
       >
-        {/* Decorative elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className={`absolute top-20 right-1/4 w-64 h-64 rounded-full blur-3xl opacity-5 transition-colors duration-500 ${isDark ? "bg-emerald-500" : "bg-emerald-400"}`}></div>
           <div className={`absolute bottom-20 left-1/4 w-80 h-80 rounded-full blur-3xl opacity-5 transition-colors duration-500 ${isDark ? "bg-emerald-500" : "bg-emerald-400"}`}></div>
         </div>
 
-        <div className="container px-4 mx-auto relative z-10 flex justify-center">
+        <div className="container px-4 md:px-8 mx-auto relative z-10 flex justify-center">
           <div className={`absolute top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full blur-2xl opacity-30 transition-colors duration-500 ${isDark ? "bg-emerald-500" : "bg-emerald-400"}`}></div>
           <div
             className={`w-full max-w-2xl p-8 rounded-2xl transition-all duration-500 shadow-xl overflow-hidden relative z-10 ${isDark
               ? "bg-gradient-to-br from-white/[0.08] to-white/[0.02] border border-emerald-500/20 hover:border-emerald-500/50 backdrop-blur-xl"
               : "bg-white border border-emerald-300 hover:border-emerald-400"
               }`}
+            data-aos="zoom-out"
           >
             <div
               className={`absolute inset-0 opacity-0 transition-opacity duration-500 ${isDark ? "bg-gradient-to-br from-emerald-500/5 to-transparent" : "bg-gradient-to-br from-emerald-100/20 to-transparent"}`}
             ></div>
-            <div className="relative">
-              <div className="mb-3 flex items-center gap-3 justify-center">
+            <div className="relative" >
+              <div className="mb-3 flex items-center gap-3 justify-center" >
                 <div className={`w-1 h-6 transition-colors duration-500 ${isDark ? "bg-emerald-500" : "bg-emerald-500"}`}></div>
                 <h2
                   className={`text-3xl md:text-4xl font-black font-bricolage transition-colors duration-500 ${isDark ? "text-white" : "text-gray-800"}`}

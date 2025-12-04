@@ -38,7 +38,12 @@ function Navbar() {
   ];
 
   const isActive = (path) => {
-    return location.pathname === path;
+    // Jika path adalah root ("/"), cek exact match
+    if (path === "/") {
+      return location.pathname === "/";
+    }
+    // Untuk path lain, cek apakah pathname dimulai dengan path tersebut
+    return location.pathname.startsWith(path);
   };
 
   const toggleTheme = useCallback(() => {
@@ -74,21 +79,21 @@ function Navbar() {
               aria-label="HMIF Home"
               className={`group relative h-[44px] rounded-[70px] backdrop-blur-[50px] px-5 flex items-center transition-all duration-500 hover:scale-[1.02] ${isDark
                 ? "bg-white/[0.05] shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.20),inset_1px_0_0_rgba(255,255,255,0.15)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.2),inset_0_1px_0_rgba(255,255,255,0.25)]"
-                : "bg-white/[0.08] shadow-[0_4px_16px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.50),inset_1px_0_0_rgba(255,255,255,0.40)] hover:shadow-[0_6px_20px_rgba(255,255,255,0.15),inset_0_1px_0_rgba(255,255,255,0.60)]"
+                : "bg-black/[0.1] shadow-[0_2px_8px_rgba(0,0,0,0.08),inset_0_1px_0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_2px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12),inset_0_1px_0.5px_rgba(255,255,255,0.7),inset_-1px_-1px_2px_rgba(0,0,0,0.10)] border border-white/[0.25]"
                 }`}
             >
               <div className="flex items-center space-x-2">
                 <img
                   src="/hmif.svg"
                   alt="HMIF"
-                  className={`w-auto h-4 transition-all duration-500 ${isDark ? "brightness-110 drop-shadow-[0_0_8px_rgba(96,165,250,0.3)]" : "drop-shadow-[0_2px_8px_rgba(0,0,0,0.15)]"} group-hover:scale-105`}
+                  className={`w-auto h-4 transition-all duration-500 ${isDark ? "brightness-110 drop-shadow-[0_0_8px_rgba(96,165,250,0.3)]" : "drop-shadow-[0_4px_12px_rgba(0,0,0,0.2)]"} group-hover:scale-105`}
                 />
               </div>
             </Link>
             <div
               className={`hidden lg:block relative h-[44px] rounded-[70px] backdrop-blur-[50px] transition-all duration-500 ${isDark
                 ? "bg-white/[0.05] shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.20),inset_1px_0_0_rgba(255,255,255,0.15)]"
-                : "bg-white/[0.08] shadow-[0_4px_16px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.50),inset_1px_0_0_rgba(255,255,255,0.40)]"
+                : "bg-black/[0.1] shadow-[0_2px_8px_rgba(0,0,0,0.08),inset_0_1px_0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_2px_rgba(0,0,0,0.08)] border border-white/[0.25]"
                 }`}
             >
               <ul className="flex items-center justify-center h-full gap-0.5 px-3">
@@ -120,7 +125,7 @@ function Navbar() {
               aria-label="Toggle theme"
               className={`hidden lg:flex relative w-[44px] h-[44px] rounded-full backdrop-blur-[50px] items-center justify-center transition-all duration-500 cursor-pointer group hover:scale-110 ${isDark
                 ? "bg-white/[0.05] shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.20)] hover:shadow-[0_6px_20px_rgba(251,191,36,0.2)]"
-                : "bg-white/[0.10] shadow-[0_4px_16px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.50)] hover:shadow-[0_6px_20px_rgba(147,197,253,0.2)]"
+                : "bg-black/[0.1] shadow-[0_2px_8px_rgba(0,0,0,0.08),inset_0_1px_0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_2px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12),inset_0_1px_0.5px_rgba(255,255,255,0.7),inset_-1px_-1px_2px_rgba(0,0,0,0.10)] border border-white/[0.25]"
                 }`}
             >
               {isDark ? (
@@ -139,9 +144,9 @@ function Navbar() {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className={`lg:hidden relative w-[44px] h-[44px] rounded-full backdrop-blur-[50px] flex items-center justify-center transition-all duration-500 hover:scale-105 ${isDark
-                ? "bg-white/[0.05] text-gray-200 hover:text-blue-300 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.20)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.2)]"
-                : "bg-white/[0.10] text-white/90 hover:text-blue-400 shadow-[0_4px_16px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.50)] hover:shadow-[0_6px_20px_rgba(255,255,255,0.15)]"
-                }`}
+                ? "bg-white/[0.05] shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.20)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.2)]"
+                : "bg-black/[0.1] shadow-[0_2px_8px_rgba(0,0,0,0.08),inset_0_1px_0.5px_rgba(255,255,255,0.6),inset_-1px_-1px_2px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12),inset_0_1px_0.5px_rgba(255,255,255,0.7)] border border-white/[0.25]"
+                } ${isOpen ? "text-white" : "text-white"}`}
               aria-label="Toggle menu"
             >
               {isOpen ? <FaTimes size={19} /> : <FaBars size={19} />}

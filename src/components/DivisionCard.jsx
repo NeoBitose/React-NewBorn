@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { colorMap } from "../constants/divisions";
 import { DivisionDrawer } from "./DivisionDrawer";
 import SpotlightCard from "./SpotlightCard";
 
-export const DivisionCard = ({ division, isDark }) => {
+export const DivisionCard = memo(({ division, isDark }) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const palette = colorMap[division.colorClass] || colorMap.emerald;
 
@@ -22,7 +22,7 @@ export const DivisionCard = ({ division, isDark }) => {
                 >
                     <div className="relative flex flex-col items-center text-center space-y-4">
                         <img src={`/icon-divisi/${division.image}`} alt={division.name} className="w-20 h-20 transition-transform duration-500 group-hover:scale-110" />
-                        <h3 className={`text-2xl font-bold transition-colors duration-500 ${isDark ? palette.titleDark : palette.titleLight}`}>
+                        <h3 className={`text-xl font-bold transition-colors duration-500 ${isDark ? palette.titleDark : palette.titleLight}`}>
                             {division.name}
                         </h3>
                     </div>
@@ -38,4 +38,8 @@ export const DivisionCard = ({ division, isDark }) => {
             />
         </>
     );
-};
+});
+
+DivisionCard.displayName = 'DivisionCard';
+
+export default DivisionCard;

@@ -8,10 +8,10 @@ import { useEffect } from 'react';
 export const useDocumentTitle = (title, includeSiteName = true) => {
   useEffect(() => {
     const siteName = 'HMIF UNEJ';
-    const fullTitle = includeSiteName && title !== siteName 
+    const fullTitle = includeSiteName && title !== siteName
       ? `${siteName} - ${title}`
       : title;
-    
+
     document.title = fullTitle;
 
     // Cleanup - kembalikan ke title default saat component unmount

@@ -1,18 +1,21 @@
-import { useState } from "react";
-import { FiGithub, FiCode, FiShield, FiUsers, FiZap, FiFlag, FiSend, FiAward, FiCalendar, FiEye, FiCheckCircle, FiMapPin, FiPhone, FiMail, FiInstagram, FiLinkedin, FiYoutube, FiMusic, FiCpu, FiTarget, FiStar } from "react-icons/fi";
+import { useEffect } from "react";
+import { FaLightbulb } from "react-icons/fa";
+import { FiAward, FiCalendar, FiCheckCircle, FiCode, FiCpu, FiEye, FiFlag, FiMail, FiMapPin, FiPhone, FiSend, FiShield, FiTarget, FiUsers, FiZap } from "react-icons/fi";
 import HeroSection from "../components/HeroSection";
+import { colorRandom } from "../constants/colorRandom";
+import { useFetchContact } from '../hooks/homepage/useFetchContact';
 import { useFetchMission } from '../hooks/tentang/useFetchMission';
 import { useFetchVision } from '../hooks/tentang/useFetchVision';
-import { useFetchContact } from '../hooks/homepage/useFetchContact';
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
-import { colorRandom } from "../constants/colorRandom";
 import { useTheme } from "../hooks/useTheme";
-import { FaLightbulb } from "react-icons/fa";
 
 export default function About() {
-
-  useDocumentTitle("Tentang HMIF");
+  useDocumentTitle("Tentang");
   const isDark = useTheme();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const logoMeanings = [
     {
       icon: FiCode,
@@ -57,26 +60,26 @@ export default function About() {
     {
       year: "2017",
       icon: FiFlag,
-      title: "Pendirian HMIF",
-      description: "HMIF UNEJ resmi didirikan sebagai wadah bagi mahasiswa Informatika untuk berkembang dan berkolaborasi"
+      title: "Pendirian Prodi Informatika",
+      description: "Program Studi Informatika resmi dibentuk sebagai bagian dari pengembangan ilmu teknologi di lingkungan Fasilkom Unej."
+    },
+    {
+      year: "2017",
+      icon: FiSend,
+      title: "Pembentukan Awal Hmif",
+      description: "HMIF mulai dirintis sebagai organisasi mahasiswa Informatika untuk menghimpun aspirasi dan aktivitas akademik maupun non-akademik."
     },
     {
       year: "2018",
-      icon: FiSend,
-      title: "Era Digital",
-      description: "Memulai transformasi digital dengan berbagai program pelatihan teknologi dan workshop"
-    },
-    {
-      year: "2019",
       icon: FiAward,
-      title: "Prestasi Nasional",
-      description: "Meraih berbagai prestasi di kompetisi teknologi tingkat nasional dan regional"
+      title: "Penetapan HMIF Sebagai Ormawa Fasilkom",
+      description: "HMIF UNEJ resmi menjadi organisasi mahasiswa tingkat fakultas yang menaungi pengembangan minat, bakat, serta inovasi mahasiswa Informatika."
     },
     {
       year: "Sekarang",
       icon: FiCalendar,
       title: "Masa Kini",
-      description: "Terus berinovasi dan mengembangkan ekosistem teknologi di lingkungan kampus dan masyarakat"
+      description: "HMIF terus bertransformasi sebagai organisasi yang adaptif, inovatif, serta aktif membangun ekosistem teknologi di kampus dan masyarakat."
     }
   ];
 
@@ -92,11 +95,10 @@ export default function About() {
 
     return (
       <div
-        className={`group p-6 rounded-2xl transition-all shadow-sm 
+        className={`group p-6 rounded-2xl transition-all shadow-sm
         ${isDark ? style.cardDark : style.cardLight}
       `}
       >
-        {/* Icon Box */}
         <div
           className={`w-14 h-14 rounded-xl flex items-center justify-center mb-4
           transition-all
@@ -106,21 +108,16 @@ export default function About() {
           <Icon className={`text-2xl ${isDark ? style.titleDark : style.titleLight}`} />
         </div>
 
-        {/* Title */}
         <h4 className={`text-lg font-semibold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>
           {title}
         </h4>
 
-        {/* Desc */}
         <p className={`text-sm ${isDark ? "text-slate-400" : "text-slate-600"}`}>
           {description}
         </p>
       </div>
     );
   };
-
-
-  // Classes untuk Dark/Light Mode
   const commonClasses = {
     // Colors
     textPrimary: isDark ? "text-emerald-400" : "text-emerald-600",
@@ -137,7 +134,6 @@ export default function About() {
     bgAccentMuted: isDark ? "bg-gradient-to-r from-emerald-900/20 to-emerald-900/20 border-emerald-700/30" : "bg-emerald-50 border-emerald-300",
   };
 
-
   return (
     <div>
       <HeroSection
@@ -146,35 +142,33 @@ export default function About() {
         subtitleLabel="Profil dan Identitas"
       />
       <div className={`min-h-screen transition-colors duration-500 w-full ${isDark ? "bg-gray-900" : "bg-white"}`}>
-        <section className={`py-16 px-4 sm:px-6 lg:px-8 border-b ${commonClasses.borderColor}`}>
+        <section className={`py-14 px-4 sm:px-6 lg:px-8 border-b ${commonClasses.borderColor}`}>
           <div className="max-w-7xl mx-auto">
-            {/* Logo Display */}
             <div className="flex justify-center mb-12">
               <div className="relative">
-                <div
-                  className={`w-48 h-48 rounded-2xl p-1
-                    ${isDark ? "bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-700" : "bg-gradient-to-br from-emerald-600 via-emerald-500 to-emerald-400"}
-                  `}
-                >
-                  <div className={`w-full h-full rounded-2xl flex items-center justify-center ${isDark ? "bg-gray-900" : "bg-white"}`}>
-                    <div className="text-center">
-                      <FiCode className={`w-20 h-20 mx-auto mb-2 ${commonClasses.textPrimary}`} />
-                      <div className={`font-semibold ${commonClasses.textPrimary}`}>HMIF</div>
-                      <div className={`text-xs ${commonClasses.textSecondary}`}>UNEJ</div>
-                    </div>
-                  </div>
+                <div className='block my-auto mx-auto'>
+                  <model-viewer
+                    id="viewer"
+                    src="images/dimension/hmiffsf.glb"
+                    bounds="tight"
+                    ar
+                    ar-modes="webxr scene-viewer quick-look"
+                    camera-controls
+                    enviroment-image="neutral"
+                    disable-zoom
+                    poster="images/dimension/hmif3d.webp"
+                    class="object-cover sm:h-48 md:h-48 lg:h-[20rem] lg:w-[20rem] xl:h-[28rem] xl:w-[30rem]"
+                  />
                 </div>
               </div>
             </div>
-            {/* Makna Logo Header */}
-            <div className="text-center mb-12">
-              <h2 className={`${commonClasses.textPrimary} mb-4`}>Makna Logo</h2>
+            <div className="text-center mb-12" data-aos="fade-down">
+              <h2 className={`${commonClasses.textPrimary} mb-4`}>Makna Logo HMIF</h2>
               <p className={`${commonClasses.textSecondary} max-w-3xl mx-auto`}>
                 Logo HMIF UNEJ menggambarkan identitas kami sebagai himpunan mahasiswa
                 yang berfokus pada teknologi informatika dengan nilai-nilai yang kuat.
               </p>
             </div>
-            {/* Meaning Cards */}
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {topRowMeanings.map((item, index) => (
@@ -206,19 +200,16 @@ export default function About() {
           </div>
         </section>
 
-        {/* Visi & Misi Section */}
         <section className={`py-16 px-4 sm:px-6 lg:px-8 ${commonClasses.bgMuted} border-b ${commonClasses.borderColor}`}>
           <div className="max-w-6xl mx-auto">
-            {/* Section Header */}
-            <div className="text-center mb-12">
-              <h2 className={`${commonClasses.textPrimary} mb-4`}>Visi & Misi</h2>
+            <div className="text-center mb-12" data-aos="fade-down">
+              <h2 className={`${commonClasses.textPrimary} mb-4`}>Visi & Misi HMIF</h2>
               <p className={`${commonClasses.textSecondary} max-w-3xl mx-auto`}>
                 Panduan kami dalam mencapai tujuan dan memberikan kontribusi terbaik
                 bagi mahasiswa informatika dan masyarakat
               </p>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Vision */}
               <div
                 className={`rounded-2xl p-8
                   ${isDark ? "bg-gradient-to-br from-emerald-900/30 to-emerald-900/30 border border-emerald-700/50" : "bg-emerald-50 border border-emerald-300"}
@@ -242,7 +233,6 @@ export default function About() {
                   )}
                 </p>
               </div>
-              {/* Mission */}
               <div
                 className={`rounded-2xl p-8
                   ${isDark ? "bg-slate-900/50 border border-slate-800" : "bg-slate-100 border border-slate-300"}
@@ -276,7 +266,6 @@ export default function About() {
                 </ul>
               </div>
             </div>
-            {/* Core Values */}
             <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
               {["Profesional", "Inovatif", "Kolaboratif", "Berintegritas"].map((value, index) => (
                 <div
@@ -292,19 +281,17 @@ export default function About() {
           </div>
         </section>
 
-        {/* Sejarah (History) Section */}
         <section className={`py-16 px-4 sm:px-6 lg:px-8 border-b ${commonClasses.borderColor}`}>
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className={`${commonClasses.textPrimary} mb-4`}>Sejarah HMIF UNEJ</h2>
-              <p className={`${commonClasses.textSecondary} max-w-3xl mx-auto`}>
+              <h2 className={`${commonClasses.textPrimary} mb-4`} data-aos="fade-down">Sejarah HMIF</h2>
+              <p className={`${commonClasses.textSecondary} max-w-3xl mx-auto`} data-aos="fade-down">
                 Perjalanan panjang HMIF UNEJ dalam membangun komunitas teknologi
                 yang solid dan berkontribusi dalam pengembangan ilmu informatika
                 di Universitas Jember.
               </p>
             </div>
             <div className="relative">
-              {/* Timeline Line */}
               <div
                 className={`absolute left-8 top-0 bottom-0 w-0.5 hidden md:block
                   ${isDark ? "bg-gradient-to-b from-emerald-700 via-emerald-700 to-emerald-700" : "bg-gradient-to-b from-emerald-500 via-emerald-500 to-emerald-500"}
@@ -316,7 +303,6 @@ export default function About() {
 
                   return (
                     <div key={index} className="relative flex items-start gap-6">
-                      {/* Timeline Icon */}
                       <div
                         className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center border-4 relative z-10
                           ${isDark ? "bg-gradient-to-br from-emerald-700 to-emerald-700 border-gray-900" : "bg-gradient-to-br from-emerald-500 to-emerald-500 border-white"}
@@ -325,7 +311,6 @@ export default function About() {
                         <milestone.icon className="w-7 h-7 text-white" />
                       </div>
 
-                      {/* Milestone Card */}
                       <div
                         className={`flex-1 rounded-xl p-6 transition-colors
                           ${isDark ? "bg-slate-900/50 border border-slate-800 hover:border-emerald-700" : "bg-slate-100 border border-slate-300 hover:border-emerald-500"}
@@ -354,7 +339,6 @@ export default function About() {
 
               </div>
             </div>
-            {/* History Summary */}
             <div
               className={`mt-12 rounded-xl p-8
                 ${commonClasses.bgAccentMuted}
@@ -371,49 +355,39 @@ export default function About() {
           </div>
         </section>
 
-        {/* Maskot (Mascot) Section */}
         <section className={`py-16 px-4 sm:px-6 lg:px-8 ${commonClasses.bgMuted} border-b ${commonClasses.borderColor}`}>
           <div className="max-w-6xl mx-auto">
-            {/* Section Header */}
-            <div className="text-center mb-12">
+            <div className="text-center mb-12" data-aos="fade-down">
               <div
                 className={`inline-block px-4 py-2 rounded-full mb-4
                   ${isDark ? "bg-emerald-900/30 border border-emerald-700/50" : "bg-emerald-100 border border-emerald-300"}
                 `}
               >
-                <span className={commonClasses.textPrimary}>Maskot Kami</span>
+                <span className={commonClasses.textPrimary}>Maskot HMIF</span>
               </div>
-              <h2 className={`${commonClasses.textPrimary} mb-4`}>Cogito</h2>
-              <p className={`${commonClasses.textSecondary} text-sm`}>Maskot HMIF UNEJ</p>
+              <h2 className={`${commonClasses.textSecondary} mb-4`}>"Cogito"</h2>
+              <p className={`${commonClasses.textSecondary} text-sm`}>Perkenalan visual yang mengidentifikasi Cogito sebagai Maskot kami</p>
             </div>
 
-            {/* Maskot Display */}
             <div className="flex justify-center mb-12">
               <div className="relative">
-                {/* Cogito Mascot Representation */}
                 <div
-                  className={`w-64 h-64 rounded-3xl p-1
+                  className={`w-72 h-72 rounded-3xl p-1
                     ${isDark ? "bg-gradient-to-br from-emerald-700 via-emerald-700 to-emerald-600" : "bg-gradient-to-br from-emerald-500 via-emerald-500 to-emerald-400"}
                   `}
                 >
                   <div className={`w-full h-full rounded-3xl flex items-center justify-center relative overflow-hidden ${isDark ? "bg-gray-900" : "bg-white"}`}>
-                    {/* Glow effect */}
                     <div className={`absolute inset-0 ${isDark ? "bg-gradient-to-t from-emerald-900/20 to-transparent" : "bg-gradient-to-t from-emerald-100/50 to-transparent"}`} />
-
-                    {/* Mascot icon */}
-                    <div className="relative z-10 flex flex-col items-center">
-                      <div className="relative">
-                        <FiCpu className={`w-32 h-32 ${commonClasses.textPrimary}`} />
-                        <FiZap className={`w-8 h-8 ${isDark ? "text-emerald-300" : "text-emerald-500"} absolute -top-2 -right-2 animate-pulse`} />
-                      </div>
-                      <div className={`${commonClasses.textPrimary} mt-4 font-semibold`}>Cogito</div>
-                    </div>
+                    <img
+                      src="/cogito-again.webp"
+                      alt="Cogito Mascot"
+                      className="relative z-10 w-full h-full object-cover object-center scale-150 translate-y-20 rounded-3xl"
+                    />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Main Mascot Description */}
             <div
               className={`rounded-2xl p-8 mb-8
                 ${commonClasses.bgAccentMuted}
@@ -429,7 +403,6 @@ export default function About() {
               </p>
             </div>
 
-            {/* Cogito Characteristics */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div
                 className={`rounded-xl p-6 text-center transition-colors
@@ -489,7 +462,6 @@ export default function About() {
               </div>
             </div>
 
-            {/* Cogito Quote */}
             <div className="mt-8 text-center">
               <div
                 className={`inline-block rounded-xl px-8 py-4
@@ -504,11 +476,9 @@ export default function About() {
           </div>
         </section>
 
-        {/* Hubungi Kami (Contact Us) Section */}
         <section className={`py-16 border-t ${commonClasses.borderColor} ${isDark ? "bg-slate-900/50" : "bg-slate-100"}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Section Header */}
-            <div className="text-center mb-12">
+            <div className="text-center mb-12" data-aos="fade-down">
               <h2 className={`${commonClasses.textPrimary} mb-4`}>Hubungi Kami</h2>
               <p className={`${commonClasses.textSecondary} max-w-2xl mx-auto`}>
                 Kami terbuka untuk kolaborasi, pertanyaan, atau sekadar berbagi
@@ -517,10 +487,8 @@ export default function About() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Map */}
               <div className={`${isDark ? "bg-slate-900 border border-slate-800" : "bg-white border border-slate-300"} rounded-xl overflow-hidden`}>
-                <div className="aspect-video relative">
-                  {/* Google Maps Placeholder */}
+                <div className="relative w-full h-full">
                   <iframe
                     src="https://maps.google.com/maps?q=universitas%20jember&t=&z=17&ie=UTF8&iwloc=&output=embed"
                     width="100%"
@@ -535,9 +503,7 @@ export default function About() {
                 </div>
               </div>
 
-              {/* Contact Information */}
               <div className="space-y-6">
-                {/* Address */}
                 <div
                   className={`rounded-xl p-6 transition-colors
                     ${isDark ? "bg-slate-900 border border-slate-800 hover:border-emerald-700" : "bg-white border border-slate-300 hover:border-emerald-500"}
@@ -563,7 +529,6 @@ export default function About() {
                   </div>
                 </div>
 
-                {/* Phone */}
                 <div
                   className={`rounded-xl p-6 transition-colors
                     ${isDark ? "bg-slate-900 border border-slate-800 hover:border-emerald-700" : "bg-white border border-slate-300 hover:border-emerald-500"}
@@ -579,17 +544,30 @@ export default function About() {
                     </div>
                     <div className="flex-1">
                       <h3 className={`${commonClasses.textContrast} mb-2`}>Telepon</h3>
-                      <a
-                        href="tel:+62331123456"
-                        className={`${commonClasses.textPrimary} hover:text-emerald-300 transition-colors`}
-                      >
-                        +62 331 123 456
-                      </a>
+                      <div className="space-y-2">
+                        {
+                          loadingContact ? (
+                            <div>
+                              <p>lorem</p>
+                            </div>
+                          ) : (
+                            dataContact.map((value, index) => (
+                              <div>
+                                <a
+                                  href={`tel:${value.number}`}
+                                  className={`${commonClasses.textPrimary} hover:text-emerald-300 transition-colors`}
+                                >
+                                  {value.number} ({value.name})
+                                </a>
+                              </div>
+                            ))
+                          )
+                        }
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Email */}
                 <div
                   className={`rounded-xl p-6 transition-colors
                     ${isDark ? "bg-slate-900 border border-slate-800 hover:border-emerald-700" : "bg-white border border-slate-300 hover:border-emerald-500"}

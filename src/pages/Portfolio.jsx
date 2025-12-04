@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiGithub, FiSearch } from "react-icons/fi";
 import { useDebounce } from "use-debounce";
 import HeroSection from "../components/HeroSection";
@@ -10,12 +10,16 @@ import { useTheme } from "../hooks/useTheme";
 export default function Portfolio() {
   useDocumentTitle("Portfolio");
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const [currentPage, setCurrentPage] = useState(1);
 
   const { loading, portfolio, totalPages } = useFetchAllPortfolio(debouncedSearchQuery, currentPage);
-  const portfolioData = portfolio.data || [];
+  const portfolioData = portfolio || [];
   const isDark = useTheme();
 
   const handleSearch = (e) => {
@@ -56,7 +60,6 @@ export default function Portfolio() {
             </div>
           </div>
 
-          {/* Portfolio Grid */}
           {loading ? (
             <PortfolioSkeleton />
           ) : portfolioData && portfolioData.length > 0 ? (
@@ -68,18 +71,17 @@ export default function Portfolio() {
                     href={`/portfolio/${item.slug}`}
                     className={`group relative rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl h-full flex flex-col ${isDark
                       ? "bg-gradient-to-br from-white/10 via-white/5 to-emerald-500/10 border border-emerald-500/20 hover:border-emerald-500/50"
-                      : "bg-gradient-to-br from-white/60 via-white/40 to-emerald-200/30 border border-white/60 hover:border-emerald-400"
+                      : "bg-gradient-to-br from-white/60 via-white/40 to-emerald-200/30 border border-emerald-200 hover:border-emerald-400"
                       }`}
                   >
                     <div className="absolute inset-0 backdrop-blur-md pointer-events-none"></div>
 
-                    {/* Image Section */}
                     {item.image && (
                       <div className="relative h-48 overflow-hidden bg-gradient-to-b from-emerald-500/20 to-transparent">
                         <img
                           src={import.meta.env.VITE_API_BASE_URL_ASSETS + "portfolio/" + item.image}
                           alt={item.title}
-                          className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                          className="w-full h-full object-cover group-hover:opacity-100 transition-opacity duration-300"
                           onError={(e) => {
                             e.target.style.display = "none";
                           }}
@@ -135,7 +137,6 @@ export default function Portfolio() {
                       </div>
                     </div>
 
-                    {/* Gradient overlay */}
                     <div
                       className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none ${isDark
                         ? "bg-gradient-to-t from-emerald-500/20 to-transparent"
@@ -146,13 +147,13 @@ export default function Portfolio() {
                 ))}
               </div>
 
-              {totalPages >= 1 && (
-                <div className={`flex justify-center items-center gap-3 py-8 px-8 rounded-2xl backdrop-blur-lg transition-all duration-300`}>
+              {totalPages > 0 && (
+                <div className={`flex justify-center items-center gap-2 md:gap-3 py-6 md:py-8 px-4 md:px-8 rounded-2xl backdrop-blur-lg transition-all duration-300`}>
                   <button
                     disabled={currentPage === 1}
                     onClick={() => handlePagination(1)}
                     title="Halaman pertama"
-                    className={`px-4 py-2.5 rounded-xl font-semibold transition-all duration-300 backdrop-blur-sm border hover:scale-105 active:scale-95 ${currentPage === 1
+                    className={`px-2 md:px-4 py-2 md:py-2.5 rounded-lg md:rounded-xl text-sm md:text-base font-semibold transition-all duration-300 backdrop-blur-sm border hover:scale-105 active:scale-95 ${currentPage === 1
                       ? isDark
                         ? "bg-white/5 border-white/10 text-white/40 cursor-not-allowed"
                         : "bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed"
@@ -164,12 +165,11 @@ export default function Portfolio() {
                     ⟨⟨
                   </button>
 
-                  {/* Previous Button */}
                   <button
                     disabled={currentPage === 1}
                     onClick={() => handlePagination(currentPage - 1)}
                     title="Halaman sebelumnya"
-                    className={`px-4 py-2.5 rounded-xl font-semibold transition-all duration-300 backdrop-blur-sm border hover:scale-105 active:scale-95 ${currentPage === 1
+                    className={`px-2 md:px-4 py-2 md:py-2.5 rounded-lg md:rounded-xl text-sm md:text-base font-semibold transition-all duration-300 backdrop-blur-sm border hover:scale-105 active:scale-95 ${currentPage === 1
                       ? isDark
                         ? "bg-white/5 border-white/10 text-white/40 cursor-not-allowed"
                         : "bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed"
@@ -181,20 +181,18 @@ export default function Portfolio() {
                     ⟨
                   </button>
 
-                  {/* Page Info */}
-                  <div className={`px-6 py-2.5 rounded-xl font-semibold backdrop-blur-sm border transition-all duration-300 ${isDark
+                  <div className={`px-3 md:px-6 py-2 md:py-2.5 rounded-lg md:rounded-xl text-sm md:text-base font-semibold backdrop-blur-sm border transition-all duration-300 ${isDark
                     ? "bg-emerald-600/30 border-emerald-400/50 text-emerald-200"
                     : "bg-emerald-400/30 border-emerald-300/60 text-emerald-800"
                     }`}>
                     <span className="font-bold">{currentPage}</span> / <span className="opacity-70">{totalPages}</span>
                   </div>
 
-                  {/* Next Button */}
                   <button
                     disabled={currentPage === totalPages}
                     onClick={() => handlePagination(currentPage + 1)}
                     title="Halaman berikutnya"
-                    className={`px-4 py-2.5 rounded-xl font-semibold transition-all duration-300 backdrop-blur-sm border hover:scale-105 active:scale-95 ${currentPage === totalPages
+                    className={`px-2 md:px-4 py-2 md:py-2.5 rounded-lg md:rounded-xl text-sm md:text-base font-semibold transition-all duration-300 backdrop-blur-sm border hover:scale-105 active:scale-95 ${currentPage === totalPages
                       ? isDark
                         ? "bg-white/5 border-white/10 text-white/40 cursor-not-allowed"
                         : "bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed"
@@ -206,12 +204,11 @@ export default function Portfolio() {
                     ⟩
                   </button>
 
-                  {/* Last Page Button */}
                   <button
                     disabled={currentPage === totalPages}
                     onClick={() => handlePagination(totalPages)}
                     title="Halaman terakhir"
-                    className={`px-4 py-2.5 rounded-xl font-semibold transition-all duration-300 backdrop-blur-sm border hover:scale-105 active:scale-95 ${currentPage === totalPages
+                    className={`px-2 md:px-4 py-2 md:py-2.5 rounded-lg md:rounded-xl text-sm md:text-base font-semibold transition-all duration-300 backdrop-blur-sm border hover:scale-105 active:scale-95 ${currentPage === totalPages
                       ? isDark
                         ? "bg-white/5 border-white/10 text-white/40 cursor-not-allowed"
                         : "bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed"

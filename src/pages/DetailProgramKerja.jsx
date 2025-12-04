@@ -1,15 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import HeroSection from "../components/HeroSection";
 
+import { APP_CONFIG } from '../config';
 import { useFetchDetailProker } from '../hooks/proker/useFetchDetailProker';
 import { useFetchGalleryProker } from '../hooks/proker/useFetchGalleryProker';
 import { useFetchTimelineProker } from '../hooks/proker/useFetchTimelineProker';
 import { useTheme } from "../hooks/useTheme";
-import { APP_CONFIG } from '../config';
 
-import { FiFileText, FiImage, FiCalendar, FiUsers, FiX } from "react-icons/fi";
+import { FiCalendar, FiFileText, FiImage, FiX } from "react-icons/fi";
+import useDocumentTitle from '../hooks/useDocumentTitle';
 
 const removeHtmlTags = (input) => {
   let cleanedString = input.replace(/<[^>]*>/g, '');
@@ -25,7 +26,6 @@ const SimpleLightboxModal = ({ image, caption, onClose }) => {
   if (!image) return null;
 
   return (
-    // Modal Lightbox dipertahankan tetap gelap
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm" onClick={onClose}>
       <div className="relative max-w-4xl w-full max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
         <button
@@ -51,8 +51,8 @@ const SimpleLightboxModal = ({ image, caption, onClose }) => {
 };
 
 export default function ProkerDetailPage() {
-
-  const isDark= useTheme();
+  useDocumentTitle('Program Kerja');
+  const isDark = useTheme();
   const { slug } = useParams();
 
   const { dataDetailProker, loadingDetailProker } = useFetchDetailProker(slug);
@@ -88,15 +88,38 @@ export default function ProkerDetailPage() {
     setSelectedCaption(null);
   };
 
+  // Scroll to top when component mounts or slug changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
+
   const detail = dataDetailProker.length > 0 ? dataDetailProker[0] : {};
 
-  const getStatusStyle = (status) => {
-    // Status badges tetap menggunakan warna cerah/gradient
-    switch (status) {
-      case "COMING SOON": return "bg-cyan-500/20 text-cyan-500 border-cyan-500/30";
-      case "TERLAKSANA": return "bg-emerald-500/20 text-emerald-500 border-emerald-500/30";
-      case "BERLANGSUNG": return "bg-blue-500/20 text-blue-500 border-blue-500/30";
-      default: return isDark ? "bg-slate-500/20 text-slate-300 border-slate-500/30" : "bg-gray-300/50 text-gray-700 border-gray-400/50";
+  const getStatusStyle = (status, updated_at) => {
+    const currentYear = new Date().getFullYear();
+    const updatedYear = new Date(updated_at).getFullYear();
+    const isUpdatedThisYear = updatedYear === currentYear;
+    const isActive = status === "active";
+
+    // Logic:
+    // - Jika active dan updated tahun ini = "Sedang Berjalan" (emerald)
+    // - Jika deactive dan updated tahun ini = "Selesai" (blue)
+    // - Jika deactive dan updated tahun lalu = "Belum Berjalan" (purple)
+    if (isActive && isUpdatedThisYear) {
+      return {
+        status: "SEDANG BERJALAN",
+        style: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+      };
+    } else if (!isActive && isUpdatedThisYear) {
+      return {
+        status: "SELESAI",
+        style: "bg-blue-500/20 text-blue-400 border-blue-500/30"
+      };
+    } else {
+      return {
+        status: "BELUM BERJALAN",
+        style: "bg-purple-500/20 text-purple-400 border-purple-500/30"
+      };
     }
   };
 
@@ -117,7 +140,6 @@ export default function ProkerDetailPage() {
         </div>
       </div>
       <div className='flex flex-col lg:flex-row gap-8'>
-        {/* Description Skeleton */}
         <div className={`lg:w-2/3 ${isDark ? "bg-slate-900/50 border border-slate-800/50" : "bg-gray-100/70 border border-gray-300"} rounded-2xl p-8`}>
           <div className={`h-6 w-1/3 mb-6 ${isDark ? "bg-slate-700/70" : "bg-gray-300"} rounded`} />
           <div className="space-y-3">
@@ -168,8 +190,9 @@ export default function ProkerDetailPage() {
   }
 
   const cleanedDescription = detail.description ? removeHtmlTags(detail.description) : 'Deskripsi tidak tersedia.';
-  const statusText = detail.status || (dataTimelineProker.length > 0 ? "TERLAKSANA" : "COMING SOON");
-  const statusStyle = getStatusStyle(statusText);
+  const statusInfo = getStatusStyle(detail.status, detail.updated_at);
+  const statusText = statusInfo.status;
+  const statusStyle = statusInfo.style;
 
 
   return (
@@ -182,7 +205,6 @@ export default function ProkerDetailPage() {
       <div className="relative">
         <div className="max-w-7xl mx-auto py-12 space-y-12 px-4 sm:px-6 lg:px-8">
 
-          {/* Card Detail Utama */}
           <div className={`${isDark ? "bg-slate-900/50 border-slate-800/50" : "bg-white border-gray-200"} backdrop-blur-sm border rounded-2xl p-8 shadow-2xl`}>
             <div className="flex flex-col md:flex-row gap-8 items-start">
               <div className="flex-shrink-0">
@@ -195,9 +217,7 @@ export default function ProkerDetailPage() {
                 </div>
               </div>
 
-              {/* Content Section */}
               <div className="flex-1 space-y-6">
-                {/* Status Badge */}
                 <div>
                   <span className={`inline-block px-4 py-1.5 text-xs font-semibold uppercase tracking-wider rounded-full border ${statusStyle}`}>
                     {statusText}
@@ -205,9 +225,9 @@ export default function ProkerDetailPage() {
                 </div>
                 <h1 className={`text-4xl font-bold ${isDark ? "text-slate-50" : "text-gray-900"}`}>{detail.name || 'Detail Program Kerja'}</h1>
                 <div className="flex flex-wrap gap-3">
-                  <div className={`flex items-center gap-2 px-4 py-2 ${isDark ? "bg-slate-800/60" : "bg-gray-100"} border border-cyan-500/30 rounded-lg`}>
-                    <FiUsers className="w-4 h-4 text-cyan-500" />
-                    <span className={`text-sm ${isDark ? "text-slate-200" : "text-gray-800"}`}>{detail.division || 'N/A'}</span>
+                  <div className={`flex items-center gap-2 px-4 py-2 ${isDark ? "bg-emerald-500/20 border-emerald-500/50" : "bg-emerald-50 border-emerald-300"} border rounded-lg`}>
+                    <img src={`/icon-divisi/${detail.division}.png`} alt={detail.division} className="w-5 h-5" />
+                    <span className={`text-sm ${isDark ? "text-emerald-200" : "text-emerald-800"}`}>{detail.division || 'N/A'}</span>
                   </div>
                   <div className={`flex items-center gap-2 px-4 py-2 ${isDark ? "bg-slate-800/60" : "bg-gray-100"} border border-emerald-500/30 rounded-lg`}>
                     <FiCalendar className="w-4 h-4 text-emerald-500" />
@@ -219,9 +239,7 @@ export default function ProkerDetailPage() {
           </div>
 
           <div className='flex flex-col lg:flex-row gap-8'>
-            {/* Bagian Deskripsi */}
             <section className={`lg:w-2/3 ${isDark ? "bg-slate-900/50 border-slate-800/50" : "bg-white border-gray-200"} backdrop-blur-sm border rounded-2xl p-8 shadow-xl`}>
-              {/* Section Title */}
               <div className={`flex items-center gap-3 mb-6 pb-4 border-b ${isDark ? "border-slate-700/50" : "border-gray-200"}`}>
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center">
                   <FiFileText className="w-5 h-5 text-cyan-500" />
@@ -229,7 +247,6 @@ export default function ProkerDetailPage() {
                 <h2 className={`text-lg font-semibold ${isDark ? "text-slate-50" : "text-gray-900"}`}>Deskripsi Program</h2>
               </div>
 
-              {/* Description Content */}
               <div className="space-y-4">
                 {cleanedDescription.split('\n').filter(p => p.trim() !== '').map((paragraph, index) => (
                   <p key={index} className={`${isDark ? "text-slate-300" : "text-gray-600"} leading-relaxed text-base`}>
@@ -239,7 +256,6 @@ export default function ProkerDetailPage() {
               </div>
             </section>
 
-            {/* Bagian Timeline */}
             <section className={`lg:w-1/3 ${isDark ? "bg-slate-900/50 border-slate-800/50" : "bg-white border-gray-200"} backdrop-blur-sm border rounded-2xl p-8 shadow-xl`}>
               <div className={`flex items-center gap-3 mb-6 pb-4 border-b ${isDark ? "border-slate-700/50" : "border-gray-200"}`}>
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center">
@@ -250,10 +266,8 @@ export default function ProkerDetailPage() {
               <div className="pl-5">
                 {dataTimelineProker.map((timeline, index) => (
                   <div className="flex relative pb-12" key={index}>
-                    {/* Timeline Line */}
                     <div className={`h-full w-0.5 absolute inset-0 left-[20px] ${isDark ? "bg-slate-800" : "bg-gray-300"} pointer-events-none`} />
 
-                    {/* Timeline Dot */}
                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500 inline-flex items-center justify-center text-white relative z-10">
                       <FiCalendar className="w-5 h-5 text-white" />
                     </div>
@@ -269,7 +283,6 @@ export default function ProkerDetailPage() {
                   </div>
                 ))}
                 <div className="flex relative">
-                  {/* Timeline Dot */}
                   <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500 inline-flex items-center justify-center text-white relative z-10">
                     <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
                       <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
@@ -289,9 +302,7 @@ export default function ProkerDetailPage() {
             </section>
           </div>
 
-          {/* Bagian Galeri */}
           <section className={`${isDark ? "bg-slate-900/50 border-slate-800/50" : "bg-white border-gray-200"} backdrop-blur-sm border rounded-2xl p-8 shadow-xl`}>
-            {/* Section Title */}
             <div className={`flex items-center gap-3 mb-6 pb-4 border-b ${isDark ? "border-slate-700/50" : "border-gray-200"}`}>
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center">
                 <FiImage className="w-5 h-5 text-emerald-500" />
@@ -299,7 +310,6 @@ export default function ProkerDetailPage() {
               <h2 className={`text-lg font-semibold ${isDark ? "text-slate-50" : "text-gray-900"}`}>Dokumentasi Program</h2>
             </div>
 
-            {/* Gallery Content menggunakan Grid Tailwind CSS */}
             {galleryProker.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {galleryProker.map((item, index) => (
@@ -334,7 +344,6 @@ export default function ProkerDetailPage() {
         </div>
       </div>
 
-      {/* Lightbox Modal sederhana yang baru */}
       <SimpleLightboxModal
         image={selectedImage}
         caption={selectedCaption}

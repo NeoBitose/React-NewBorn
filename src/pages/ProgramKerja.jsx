@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { FiChevronLeft, FiChevronRight, FiSearch } from "react-icons/fi";
+import { useEffect, useMemo, useState } from "react";
+import { FiSearch } from "react-icons/fi";
 import { NavLink } from 'react-router-dom';
 import { useDebounce } from "use-debounce";
 import HeroSection from "../components/HeroSection";
@@ -21,9 +21,12 @@ const ImageWithFallback = ({ src, alt, className }) => (
 );
 
 export default function ProgramKerja() {
-
   useDocumentTitle("Program Kerja HMIF");
   const isDark = useTheme();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const divisions = ["Semua", "BPI", "PSDM", "LITBANG", "HUMAS", "MEDIATEK", "KWU"]; // Tambahan divisi dari mock data
   const ITEMS_PER_PAGE = 9;
@@ -143,45 +146,57 @@ export default function ProgramKerja() {
     const imageUrl = APP_CONFIG.API_BASE_URL_ASSETS + '/proker/' + proker.logo;
 
     return (
-      <NavLink to={`/proker/${proker.slug}`} className="hover:scale-[1.02] transition duration-300">
+      <NavLink to={`/proker/${proker.slug}`} className="hover:scale-105 transition duration-300">
         <div
-          className={`group relative rounded-xl overflow-hidden transition-all duration-300 border
-          ${isDark ? "bg-slate-800 border-emerald-500/30 hover:border-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20" : "bg-white border-emerald-500/50 hover:border-emerald-500 shadow-sm hover:shadow-md hover:shadow-emerald-500/15"}
-          `}
+          className={`group relative rounded-2xl overflow-hidden transition-all duration-300 border h-full flex flex-col ${isDark
+            ? "bg-gradient-to-br from-white/10 via-white/5 to-emerald-500/10 border-emerald-500/20 hover:border-emerald-500/50 hover:shadow-2xl"
+            : "bg-gradient-to-br from-white/60 via-white/40 to-emerald-200/30 border border-emerald-200 hover:border-emerald-400 hover:shadow-2xl"
+            }`}
         >
-          <div className="absolute top-4 right-4 z-10">
-            <span
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold ${badgeClass}`}
-            >
-              {status}
-            </span>
-          </div>
+          <div className="absolute inset-0 backdrop-blur-md pointer-events-none"></div>
 
-          <div className={`relative h-48 overflow-hidden flex items-center justify-center p-4 ${commonClasses.bgImage}`}>
+          <div className={`relative h-48 overflow-hidden flex items-center justify-center p-4`}>
+            <div className="absolute top-4 right-4 z-10">
+              <span
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold ${badgeClass}`}
+              >
+                {status}
+              </span>
+            </div>
             <ImageWithFallback
               src={imageUrl}
               alt={proker.name}
-              className="h-32 object-contain transition-transform duration-300 group-hover:scale-110"
+              className="h-32 object-contain group-hover:scale-110 transition-transform duration-300 relative z-5 drop-shadow-xl brightness-125 contrast-125"
             />
-            <div className={`absolute inset-0 ${commonClasses.bgImageGradient}`}></div>
           </div>
 
-          <div className="p-6 space-y-4">
-            <h3 className={`text-xl font-bold transition-colors duration-300 ${commonClasses.textPrimary}`}>
+          <div className="relative z-10 p-6 space-y-4 flex flex-col flex-grow">
+            <h3 className={`text-lg md:text-xl font-bold transition-colors duration-300 line-clamp-2 ${isDark
+              ? "text-white group-hover:text-emerald-300"
+              : "text-gray-900 group-hover:text-emerald-600"
+              }`}>
               {proker.name}
             </h3>
 
-            <p className={`text-sm line-clamp-2 ${commonClasses.textSecondary}`}>
+            <p className={`text-sm line-clamp-2 flex-grow ${isDark ? "text-white/75 group-hover:text-white/90" : "text-gray-700 group-hover:text-gray-800"
+              }`}>
               {proker.description.length > 100 ? proker.description.slice(0, 100) + '...' : proker.description}
             </p>
 
-            <div className={`flex items-center gap-2 pt-2 border-t ${commonClasses.textDivider}`}>
+            <div className={`flex items-center gap-2 pt-2 border-t ${isDark ? "border-white/10" : "border-white/10"}`}>
               <div className={`w-2 h-2 rounded-full ${isDark ? "bg-emerald-500" : "bg-emerald-600"}`}></div>
-              <span className={`text-sm font-medium ${commonClasses.textAccent}`}>
+              <span className={`text-sm font-medium ${isDark ? "text-white/70" : "text-gray-700"}`}>
                 {proker.division}
               </span>
             </div>
           </div>
+
+          <div
+            className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none ${isDark
+              ? "bg-gradient-to-t from-emerald-500/20 to-transparent"
+              : "bg-gradient-to-t from-emerald-300/30 to-transparent"
+              }`}
+          ></div>
         </div>
       </NavLink>
     );
@@ -206,10 +221,10 @@ export default function ProgramKerja() {
               className={`w-full border rounded-xl pl-12 pr-6 py-4 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:border-transparent transition-all ${commonClasses.inputBg}`}
             />
           </div>
-          <div className="flex overflow-x-auto pb-2 gap-3 items-center">
+          <div className="font-sans flex overflow-x-auto scrollbar-hide pb-2 gap-3 items-center">
             <button
               onClick={() => handleDivisionChange("Semua")}
-              className={`flex-shrink-0 px-6 py-2 rounded-full transition-all duration-300 font-medium text-sm
+              className={`flex-shrink-0 px-5 py-2 rounded-full transition-all duration-300 font-medium text-sm
                 ${selectedDivision === "Semua"
                   ? commonClasses.btnActive
                   : commonClasses.btnInactive
@@ -283,31 +298,76 @@ export default function ProgramKerja() {
         )}
 
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-4">
+          <div className={`flex justify-center items-center gap-2 md:gap-3 py-6 md:py-8 px-4 md:px-8 rounded-2xl backdrop-blur-lg transition-all duration-300`}>
             <button
-              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
               disabled={currentPage === 1}
-              className={`p-2 rounded-lg border transition-all disabled:opacity-30 disabled:cursor-not-allowed ${commonClasses.btnPagination}`}
+              onClick={() => setCurrentPage(1)}
+              title="Halaman pertama"
+              className={`px-2 md:px-4 py-2 md:py-2.5 rounded-lg md:rounded-xl text-sm md:text-base font-semibold transition-all duration-300 backdrop-blur-sm border hover:scale-105 active:scale-95 ${currentPage === 1
+                ? isDark
+                  ? "bg-white/5 border-white/10 text-white/40 cursor-not-allowed"
+                  : "bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed"
+                : isDark
+                  ? "bg-emerald-600/80 border-emerald-400/70 text-white hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/30"
+                  : "bg-emerald-500/80 border-emerald-300/70 text-white hover:bg-emerald-500 hover:shadow-lg hover:shadow-emerald-400/30"
+                }`}
             >
-              <FiChevronLeft className="w-5 h-5" />
+              ⟨⟨
             </button>
 
-            <div className="flex items-center gap-2">
-              <span className={`${commonClasses.textHighlight} min-w-[3rem] text-center font-semibold`}>
-                {currentPage}
-              </span>
-              <span className={isDark ? "text-slate-600" : "text-slate-400"}>/</span>
-              <span className={commonClasses.textSecondary}>
-                {totalPages}
-              </span>
+            <button
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+              title="Halaman sebelumnya"
+              className={`px-2 md:px-4 py-2 md:py-2.5 rounded-lg md:rounded-xl text-sm md:text-base font-semibold transition-all duration-300 backdrop-blur-sm border hover:scale-105 active:scale-95 ${currentPage === 1
+                ? isDark
+                  ? "bg-white/5 border-white/10 text-white/40 cursor-not-allowed"
+                  : "bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed"
+                : isDark
+                  ? "bg-emerald-600/80 border-emerald-400/70 text-white hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/30"
+                  : "bg-emerald-500/80 border-emerald-300/70 text-white hover:bg-emerald-500 hover:shadow-lg hover:shadow-emerald-400/30"
+                }`}
+            >
+              ⟨
+            </button>
+
+            <div className={`px-3 md:px-6 py-2 md:py-2.5 rounded-lg md:rounded-xl text-sm md:text-base font-semibold backdrop-blur-sm border transition-all duration-300 ${isDark
+              ? "bg-emerald-600/30 border-emerald-400/50 text-emerald-200"
+              : "bg-emerald-400/30 border-emerald-300/60 text-emerald-800"
+              }`}>
+              <span className="font-bold">{currentPage}</span> / <span className="opacity-70">{totalPages}</span>
             </div>
 
             <button
-              onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
               disabled={currentPage === totalPages}
-              className={`p-2 rounded-lg border transition-all disabled:opacity-30 disabled:cursor-not-allowed ${commonClasses.btnPagination}`}
+              onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+              title="Halaman berikutnya"
+              className={`px-2 md:px-4 py-2 md:py-2.5 rounded-lg md:rounded-xl text-sm md:text-base font-semibold transition-all duration-300 backdrop-blur-sm border hover:scale-105 active:scale-95 ${currentPage === totalPages
+                ? isDark
+                  ? "bg-white/5 border-white/10 text-white/40 cursor-not-allowed"
+                  : "bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed"
+                : isDark
+                  ? "bg-emerald-600/80 border-emerald-400/70 text-white hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/30"
+                  : "bg-emerald-500/80 border-emerald-300/70 text-white hover:bg-emerald-500 hover:shadow-lg hover:shadow-emerald-400/30"
+                }`}
             >
-              <FiChevronRight className="w-5 h-5" />
+              ⟩
+            </button>
+
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(totalPages)}
+              title="Halaman terakhir"
+              className={`px-2 md:px-4 py-2 md:py-2.5 rounded-lg md:rounded-xl text-sm md:text-base font-semibold transition-all duration-300 backdrop-blur-sm border hover:scale-105 active:scale-95 ${currentPage === totalPages
+                ? isDark
+                  ? "bg-white/5 border-white/10 text-white/40 cursor-not-allowed"
+                  : "bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed"
+                : isDark
+                  ? "bg-emerald-600/80 border-emerald-400/70 text-white hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/30"
+                  : "bg-emerald-500/80 border-emerald-300/70 text-white hover:bg-emerald-500 hover:shadow-lg hover:shadow-emerald-400/30"
+                }`}
+            >
+              ⟩⟩
             </button>
           </div>
         )}

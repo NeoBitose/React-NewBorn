@@ -1,7 +1,8 @@
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import SpotlightCard from "./SpotlightCard";
 
-export const NavigationCard = ({ to, icon, title, description, isDark, colorClass }) => {
+export const NavigationCard = memo(({ to, icon, title, description, isDark, colorClass }) => {
     const colorConfig = {
         emerald: {
             dark: "border-emerald-500/20 hover:border-emerald-500/50",
@@ -87,6 +88,8 @@ export const NavigationCard = ({ to, icon, title, description, isDark, colorClas
             </Link>
         </SpotlightCard>
     );
-};
+});
+
+NavigationCard.displayName = 'NavigationCard';
 
 export default NavigationCard;

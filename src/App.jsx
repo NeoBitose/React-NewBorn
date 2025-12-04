@@ -3,23 +3,25 @@ import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Route, BrowserRouter as Router, Routes, useLocation } from "react-router-dom";
 import ClickSpark from './components/ClickSpark';
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import SplashScreen from "./components/SplashScreen";
 import { useTheme } from "./hooks/useTheme";
-import About from "./pages/About";
-import Blog from "./pages/Blog";
-import DetailBlog from "./pages/DetailBlog";
-import DetailPortfolio from "./pages/DetailPortfolio";
-import DetailProgramKerja from "./pages/DetailProgramKerja";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
-import Portfolio from "./pages/Portfolio";
-import ProgramKerja from "./pages/ProgramKerja";
-import Staf from "./pages/Staf";
+
+// Lazy load pages
+const About = lazy(() => import("./pages/About"));
+const Blog = lazy(() => import("./pages/Blog"));
+const DetailBlog = lazy(() => import("./pages/DetailBlog"));
+const DetailPortfolio = lazy(() => import("./pages/DetailPortfolio"));
+const DetailProgramKerja = lazy(() => import("./pages/DetailProgramKerja"));
+const Portfolio = lazy(() => import("./pages/Portfolio"));
+const ProgramKerja = lazy(() => import("./pages/ProgramKerja"));
+const Staf = lazy(() => import("./pages/Staf"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,18 +56,20 @@ function AppContent() {
       duration={100}
     >
       {!is404Page && <Navbar />}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/proker" element={<ProgramKerja />} />
-        <Route path="/proker/:slug" element={<DetailProgramKerja />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/blog/:slug" element={<DetailBlog />} />
-        <Route path="/staf" element={<Staf />} />
-        <Route path="/portfolio" element={<Portfolio />} />
-        <Route path="/portfolio/:slug" element={<DetailPortfolio />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div></div>}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/proker" element={<ProgramKerja />} />
+          <Route path="/proker/:slug" element={<DetailProgramKerja />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<DetailBlog />} />
+          <Route path="/staf" element={<Staf />} />
+          <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/portfolio/:slug" element={<DetailPortfolio />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
       {!is404Page && <Footer />}
     </ClickSpark>
   );
@@ -86,8 +90,9 @@ function App() {
 
   useEffect(() => {
     AOS.init({
-      duration: 1000,
+      duration: 800,
       once: true,
+      disable: 'phone',
     });
   }, [isDark]);
 
